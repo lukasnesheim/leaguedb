@@ -1,0 +1,7 @@
+{
+    "season_stage": {
+        "regular": "regular",
+        "playoff": "playoff",
+        "final": "final"
+    }
+}
