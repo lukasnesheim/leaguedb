@@ -217,3 +217,9 @@ renv/staging/
 
 # MacOS
 .DS_Store
+
+# Output
+*.png
+
+# Data
+data/
