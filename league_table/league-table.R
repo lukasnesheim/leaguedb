@@ -10,19 +10,24 @@ library(jsonlite)
 library(scales)
 
 # global variables
-week <- 14
-
 style <- read_json(system.file("style.json", package = "baseliner"))
 color <- read_json(system.file("color.json", package = "baseliner"))
 
-# tidy the league table data
-data <- read_csv(here("league_table", "data", "league_table.csv")) %>%
+# read the standings data
+data <- read_csv(here("league_table", "data", "league_table.csv"), col_types = cols(move = col_character())) # nolint
+week <- data %>% pull("week") %>% first(default = 0)
+
+# tidy the standings data
+data <- data %>%
   mutate(
-    move = c("", "", "", "", "<sup><span style='color: #3f8f29;'>+3</span></sup>", "<sup><span style='color: #bf1029;'>-1</span></sup>", "<sup><span style='color: #bf1029;'>-1</span></sup>", "<sup><span style='color: #bf1029;'>-1</span></sup>", "", ""), # nolint
-    club = paste0(club, move),
-    eff = pf / mpf
+    move = case_when(
+      str_detect(move, "\\+") ~ paste0("<sup><span style='color: #3f8f29;'>", move, "</span></sup>"), # nolint
+      str_detect(move, "-") ~ paste0("<sup><span style='color: #bf1029;'>", move, "</span></sup>"), # nolint
+      TRUE ~ ""
+    ),
+    club = paste0(club, move)
   ) %>%
-  select(rank, club, win, loss, ortg, drtg, mpf, eff, -move, -pf, -pa)
+  select(standing, club, win, loss, ortg, drtg, mpf, eff, -move, -week) # nolint
 
 # min/max offensive rating
 min_ortg <- min(data$ortg)
@@ -52,7 +57,7 @@ table <- data %>%
     source_note = "Table: Lukas Nesheim"
   ) %>%
   cols_label(
-    "rank" ~ "",
+    "standing" ~ "",
     "club" ~ "CLUB",
     "win" ~ "WIN",
     "loss" ~ "LOSS",
@@ -66,7 +71,7 @@ table <- data %>%
     style = cell_text(align = "left")
   ) %>%
   tab_style(
-    locations = cells_body(columns = rank:club),
+    locations = cells_body(columns = standing:club),
     style = cell_text(weight = style$table$font$weight$label)
   ) %>%
   tab_style(
@@ -109,7 +114,7 @@ table <- data %>%
     palette = c(color$dublin[[4]], color$dublin[[3]], color$dublin[[2]], color$dublin[[1]]), # nolint
     domain = c(min_eff, max_eff),
     format_type = "percent",
-    digits = 2,
+    digits = 1,
     pill_height = 12
   )
 
