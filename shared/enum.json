@@ -1,5 +1,13 @@
 {
-    "season_stage": {
+    "round": {
+        "seventh": "seventh",
+        "fifth": "fifth",
+        "third": "third",
+        "quarterfinal": "quarterfinal",
+        "semifinal": "semifinal",
+        "final": "final"
+    },
+    "stage": {
         "regular": "regular",
         "playoff": "playoff",
         "final": "final"
