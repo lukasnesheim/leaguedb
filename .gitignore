@@ -224,3 +224,6 @@ renv/staging/
 # Data
 data/
 renv/.gitignore
+
+# Visual Studio Code
+.vscode

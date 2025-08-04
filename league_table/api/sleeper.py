@@ -44,4 +44,4 @@ def get_rosters(sleeper_league_id: str) -> list[dict[str, str]] | None:
         return rosters
     
     except Exception as ex:
-        raise RuntimeError(f"Querying the Sleeper API failed for season id: {sleeper_league_id=}.\nException: {ex}")
+        raise RuntimeError(f"Querying the Sleeper API failed for {sleeper_league_id=}") from ex
