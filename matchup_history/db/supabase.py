@@ -27,47 +27,45 @@ def get_club_lookup(client: Client) -> dict[str, str] | None:
     except Exception as ex:
         raise RuntimeError(f"Querying the Supabase database for club ids failed.") from ex
 
-def get_standings(client: Client, season_id: str) -> pl.DataFrame | None:
+def get_matchups(client: Client, season_id: str | None = None) -> pl.DataFrame | None:
     """
-    Gets standings from the Supabase 'standing' table for a given season and week.
+    Gets matchups from the Supabase 'matchup' table.
 
     Args:
         client (Client): The Supabase client instance.
-        season_id (str): The UUID of the season.
+        season_id (str | None = None): The optional Supabase UUID of the season.
 
     Returns:
-        polars.DataFrame | None: A DataFrame with calculated standings metrics (ortg, drtg, eff, etc.).
+        polars.DataFrame: A DataFrame with the matchup records from the 'matchup' table.
         Returns None if no records are found.
     """
     try:
-        # query the supabase standing table
-        query = client.table("standing").select("*, club(id, name)").eq("season", season_id)
+        query = client.table("matchup").select("*").eq("season", season_id) if season_id is not None else client.table("matchup").select("*")
         if not (response := query.execute()).data:
             return None
         
-        # map the response data to a polars data frame
         return pl.DataFrame(response.data)
-    
+        
     except Exception as ex:
-        raise RuntimeError(f"Querying the Supabase database for league table failed for {season_id=}.") from ex
-    
-def upsert_standings(client: Client, standings: list[dict[str, Any]]) -> pl.DataFrame | None:
+        raise RuntimeError(f"Querying the Supabase database to get matchups failed with {season_id=}.") from ex
+
+def upsert_matchups(client: Client, matchups: list[dict[str, Any]]) -> pl.DataFrame | None:
     """
-    Upserts weekly standings into the Supabase 'standing' table and returns a polars DataFrame.
+    Upserts weekly matchups into the Supabase 'matchup' table and returns a polars DataFrame.
 
     Args:
-        client (Client): The Supabase client.
-        standings (list[dict[str, Any]]): Roster data from Sleeper.
+        client (Client): The Supabase client instance.
+        matchups (list[dict[str, Any]]): Matchup data to upsert.
 
     Returns:
-        polars.DataFrame | None: A DataFrame with the records upserted into the 'standing' table.
+        polars.DataFrame: A DataFrame with the matchup records upserted into the 'matchup' table.
         Returns None if no records are returned in the Supabase client upsert response.
     """
     try:
-        if not (response := client.table("standing").upsert(standings, on_conflict="season,club,week").execute()):
+        if not (response := client.table("matchup").upsert(matchups, on_conflict="season, club_x, club_y, week").execute()).data:
             return None
         
         return pl.DataFrame(response.data)
-
+    
     except Exception as ex:
-        raise RuntimeError(f"Querying the Supabase database to upsert standings failed.") from ex
+        raise RuntimeError(f"Querying the Supabase database to upsert matchups failed.") from ex

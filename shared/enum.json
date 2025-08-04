@@ -10,6 +10,6 @@
     "stage": {
         "regular": "regular",
         "playoff": "playoff",
-        "final": "final"
+        "placement": "placement"
     }
 }

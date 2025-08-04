@@ -9,16 +9,16 @@ from dotenv import load_dotenv
 from supabase import Client, create_client
 
 # local imports
-from league_table.core import get_league_table, update_standings
+from matchup_history.core import update_matchups
 from shared.python.utils import get_week
 
 load_dotenv()
 
-season_id: str | None = os.getenv("HOMIES_2023_SUPABASE")
+season_id: str | None = os.getenv("HOMIES_2024_SUPABASE")
 if not season_id:
     raise ValueError(f"Failed to retrieve the environment variable for season id.")
 
-sleeper_league_id: str | None = os.getenv("HOMIES_2023_SLEEPER")
+sleeper_league_id: str | None = os.getenv("HOMIES_2024_SLEEPER")
 if not sleeper_league_id:
     raise ValueError(f"Failed to retrieve the environment variable for sleeper league id.")
 
@@ -31,20 +31,14 @@ if not supabase_key:
     raise ValueError(f"Failed to retrieve the environment variable for supabase key.")
 
 try:
-    # get the league table week
+    # get the matchup week
     week: int = get_week()
 
     # initialize the Supabase client
     client: Client = create_client(supabase_url, supabase_key)
 
-    # update the most recent standings
-    _ = update_standings(client, sleeper_league_id, season_id, week)
-
-    # get the most recent league table
-    league_table: pl.DataFrame = get_league_table(client, season_id, week)
-
-    # save the league table as a .csv
-    league_table.sort("standing").write_csv("league_table/data/league_table.csv")
+    # update matchups in Supabase
+    matchups: pl.DataFrame = update_matchups(client, sleeper_league_id, season_id, week)
 
 except Exception as ex:
     print(f"An error occurred:")
