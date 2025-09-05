@@ -10,7 +10,7 @@ def get_week() -> int:
     """
     while True:
         try:
-            user_input = input("Enter the week number for which to update and fetch the league table (or 'quit' to exit): ").strip()
+            user_input = input("Enter the week number for which to run the script (or 'quit' to exit): ").strip()
             if user_input.lower() == "quit":
                 print(f"Exiting the program.")
                 sys.exit()

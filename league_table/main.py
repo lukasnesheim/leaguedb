@@ -14,13 +14,17 @@ from shared.python.utils import get_week
 
 load_dotenv()
 
-season_id: str | None = os.getenv("HOMIES_2023_SUPABASE")
+season_id: str | None = os.getenv("HOMIES_2024_SUPABASE")
 if not season_id:
     raise ValueError(f"Failed to retrieve the environment variable for season id.")
 
-sleeper_league_id: str | None = os.getenv("HOMIES_2023_SLEEPER")
+sleeper_league_id: str | None = os.getenv("HOMIES_2024_SLEEPER")
 if not sleeper_league_id:
     raise ValueError(f"Failed to retrieve the environment variable for sleeper league id.")
+
+supabase_league_id: str | None = os.getenv("HOMIES_ID")
+if not supabase_league_id:
+    raise ValueError(f"Failed to retrieve the environment variable for supabase league id.")
 
 supabase_url: str | None = os.getenv("SUPABASE_URL")
 if not supabase_url:
@@ -38,13 +42,13 @@ try:
     client: Client = create_client(supabase_url, supabase_key)
 
     # update the most recent standings
-    _ = update_standings(client, sleeper_league_id, season_id, week)
+    _ = update_standings(client, sleeper_league_id, supabase_league_id, season_id, week)
 
     # get the most recent league table
     league_table: pl.DataFrame = get_league_table(client, season_id, week)
 
     # save the league table as a .csv
-    league_table.sort("standing").write_csv("league_table/data/league_table.csv")
+    league_table.drop(["id", "season", "club_id"]).sort("standing").write_csv("league_table/data/league_table.csv")
 
 except Exception as ex:
     print(f"An error occurred:")
