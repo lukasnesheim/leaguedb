@@ -37,7 +37,8 @@ def get_league_table(client: Client, season_id: str, week: int) -> pl.DataFrame:
         
         clubs = pl.DataFrame(clubs).select([
             pl.col("id").alias("club_id"),
-            pl.col("name").alias("club")
+            pl.col("name").alias("club"),
+            pl.col("manager").alias("manager")
         ])
 
         # merge club name into the standings dataframe

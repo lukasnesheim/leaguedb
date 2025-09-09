@@ -22,8 +22,8 @@ data <- data %>%
   mutate(
     manager_x = str_c(word(manager_x, 1), " ", str_sub(word(manager_x, 2), 1, 1), "."), # nolint
     manager_y = str_c(word(manager_y, 1), " ", str_sub(word(manager_y, 2), 1, 1), "."), # nolint
-    club_x = paste0(name_x, "<br><span style='font-size:80%;", "color:", style$table$font$color$subtitle, "'>", manager_x, "</span>"), # nolint
-    club_y = paste0(name_y, "<br><span style='font-size:80%;", "color:", style$table$font$color$subtitle, "'>", manager_y, "</span>"), # nolint
+    club_x = paste0(name_x, "<br><span style='font-size:75%;", "color:", style$table$font$color$subtitle, "'>", manager_x, "</span>"), # nolint
+    club_y = paste0(name_y, "<br><span style='font-size:75%;", "color:", style$table$font$color$subtitle, "'>", manager_y, "</span>"), # nolint
     wr_x = wins_x / (wins_x + wins_y + draws),
     wr_y = wins_y / (wins_x + wins_y + draws),
     w_score = pmax(score_x, score_y),
@@ -143,7 +143,7 @@ matchup_table <- data %>%
 
 # save the table graphic
 gt_save_crop(
-  matchup_table_review,
+  matchup_table,
   "matchup_table_review.png",
   bg = color$background,
   whitespace = 40,
