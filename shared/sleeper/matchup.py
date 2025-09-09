@@ -63,7 +63,7 @@ def get_sleeper_matchups(sleeper_league_id: str, week: int) -> list[dict[str, An
 
         # check for uniqueness
         sleeper_ids = [id for sm in sleeper_matchups for id in (sm["sleeper_id_x"], sm["sleeper_id_y"])]
-        if len(sleeper_ids) != len(set(sleeper_ids)) or len(sleeper_ids) != 10:
+        if len(sleeper_ids) != len(set(sleeper_ids)) or len(sleeper_ids) not in (10, 12):
             raise RuntimeError(f"The same sleeper owner id was assigned to multiple matchup participants.")
 
         return sleeper_matchups

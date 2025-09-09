@@ -14,15 +14,17 @@ from shared.python.utils import get_week
 
 load_dotenv()
 
-season_id: str | None = os.getenv("FIGHTC_2024_SUPABASE")
+league: str = "HOMIES"
+
+season_id: str | None = os.getenv(f"{league}_2025_SUPABASE")
 if not season_id:
     raise ValueError(f"Failed to retrieve the environment variable for season id.")
 
-sleeper_league_id: str | None = os.getenv("FIGHTC_2024_SLEEPER")
+sleeper_league_id: str | None = os.getenv(f"{league}_2025_SLEEPER")
 if not sleeper_league_id:
     raise ValueError(f"Failed to retrieve the environment variable for sleeper league id.")
 
-supabase_league_id: str | None = os.getenv("FIGHTC_ID")
+supabase_league_id: str | None = os.getenv(f"{league}_ID")
 if not supabase_league_id:
     raise ValueError(f"Failed to retrieve the environment variable for supabase league id.")
 
