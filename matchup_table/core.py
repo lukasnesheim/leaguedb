@@ -3,7 +3,6 @@ import polars as pl
 
 # function imports
 from supabase import Client
-from typing import Any
 
 # local imports
 from shared.supabase.club import get_clubs
