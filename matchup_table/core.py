@@ -39,7 +39,7 @@ def get_matchup_table(client: Client, season_id: str, supabase_league_id: str, w
         history = matchups.group_by(pl.col("key")).agg([
             (pl.col("winner") == pl.col("club_x")).sum().alias("wins_x"),
             (pl.col("winner") == pl.col("club_y")).sum().alias("wins_y"),
-            ((pl.col("winner").is_null()) & (pl.col("score_x").is_not_null()) & (pl.col("score_y").is_not_null())).sum().alias("draws")
+            ((pl.col("winner").is_null()) & (pl.col("score_x") != 0) & (pl.col("score_y") != 0)).sum().alias("draws")
         ])
 
         # filter matchups for season and week with matchup history
