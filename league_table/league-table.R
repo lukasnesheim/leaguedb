@@ -20,12 +20,13 @@ week <- data %>% pull("week") %>% first(default = 0)
 # tidy the standings data
 data <- data %>%
   mutate(
+    manager = str_c(word(manager, 1), " ", str_sub(word(manager, 2), 1, 1), "."), # nolint
     move = case_when(
       str_detect(move, "\\+") ~ paste0("<sup><span style='color: #3f8f29;'>", move, "</span></sup>"), # nolint
       str_detect(move, "-") ~ paste0("<sup><span style='color: #bf1029;'>", move, "</span></sup>"), # nolint
       TRUE ~ ""
     ),
-    club = paste0(club, move)
+    club = paste0(club, move, "<br><span style='font-size:75%;", "color:", style$table$font$color$subtitle, "'>", manager, "</span>"), # nolint
   ) %>%
   select(standing, club, win, loss, ortg, drtg, mpf, eff, -move, -week) # nolint
 
@@ -71,7 +72,11 @@ table <- data %>%
     style = cell_text(align = "left")
   ) %>%
   tab_style(
-    locations = cells_body(columns = standing:club),
+    locations = cells_title(groups = "subtitle"),
+    style = cell_text(weight = style$table$font$weight$label)
+  ) %>%
+  tab_style(
+    locations = cells_body(columns = standing:loss),
     style = cell_text(weight = style$table$font$weight$label)
   ) %>%
   tab_style(
@@ -121,7 +126,7 @@ table <- data %>%
 # save the table graphic
 gt_save_crop(
   table,
-  "league_table/league_table.png",
+  "league_table.png",
   bg = color$background,
   whitespace = 40,
   zoom = 600 / 96

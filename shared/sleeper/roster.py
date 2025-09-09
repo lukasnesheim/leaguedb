@@ -1,9 +1,9 @@
 # package imports
 import requests
 
-def get_rosters(sleeper_league_id: str) -> list[dict[str, str]] | None:
+def get_sleeper_rosters(sleeper_league_id: str) -> list[dict[str, str]]:
     """
-    Gets current roster data from the Sleeper API for a Sleeper league.
+    Gets current roster data for a Sleeper league from the Sleeper API.
 
     Args:
         sleeper_league_id (str): The Sleeper id of the league.
@@ -20,12 +20,12 @@ def get_rosters(sleeper_league_id: str) -> list[dict[str, str]] | None:
         response.raise_for_status()
 
         if not response.json():
-            return None
+            raise RuntimeError(f"No matchup data returned from the Sleeper API for {sleeper_league_id=}.")
 
         # map the response data to a list of dictionaries
         rosters = [
             {
-                "owner_id": item["owner_id"],
+                "id": item["owner_id"],
                 "win": item["settings"]["wins"],
                 "loss": item["settings"]["losses"],
                 "draw": item["settings"]["ties"],
@@ -44,4 +44,4 @@ def get_rosters(sleeper_league_id: str) -> list[dict[str, str]] | None:
         return rosters
     
     except Exception as ex:
-        raise RuntimeError(f"Querying the Sleeper API failed for {sleeper_league_id=}") from ex
+        raise RuntimeError(f"Querying the Sleeper API failed for {sleeper_league_id=}.") from ex
