@@ -76,10 +76,10 @@ def calculate_move(current_standings: pl.DataFrame, previous_standings: pl.DataF
     
     return standings.with_columns(
         pl.when(pl.col("move") > 0)
-          .then("+" + pl.col("move").cast(str))
+          .then(pl.concat_str([pl.lit("+"), pl.col("move").cast(pl.Utf8)]))
           .when(pl.col("move") < 0)
-          .then(pl.col("move").cast(str))
-          .otherwise("")
+          .then(pl.col("move").cast(pl.Utf8))
+          .otherwise(pl.lit(""))
           .alias("move")
     ).drop(["previous"])
 

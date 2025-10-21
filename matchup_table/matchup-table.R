@@ -29,6 +29,7 @@ data <- data %>%
     w_score = pmax(score_x, score_y),
     score_x = if_else(score_x == w_score, paste0("<span style='color:#3f8f29'>", sprintf("%.2f", score_x), "</span>"), paste0("<span style='color:#bf1029'>", sprintf("%.2f", score_x), "</span>")), # nolint
     score_y = if_else(score_y == w_score, paste0("<span style='color:#3f8f29'>", sprintf("%.2f", score_y), "</span>"), paste0("<span style='color:#bf1029'>", sprintf("%.2f", score_y), "</span>")), # nolint
+    #score_x = "", score_y = "",
     record = paste0(wins_x, " ", "-", " ", wins_y)
   ) %>%
   select(club_x, score_x, wr_x, record, wr_y, score_y, club_y, -week, -wins_x, -wins_y, -name_x, -name_y, -manager_x, -manager_y, -w_score) # nolint
@@ -118,7 +119,7 @@ matchup_table <- data %>%
     style = cell_borders(
       sides = "top",
       color = color$london[[3]],
-      weight = px(0.5),
+      weight = px(1),
       style = "solid"
     )
   ) %>%
@@ -127,7 +128,7 @@ matchup_table <- data %>%
     style = cell_borders(
       sides = "bottom",
       color = color$london[[5]],
-      weight = px(0.5),
+      weight = px(1),
       style = "solid"
     )
   ) %>%
@@ -136,7 +137,7 @@ matchup_table <- data %>%
     style = cell_borders(
       sides = c("left", "right"),
       color = color$london[[3]],
-      weight = px(0.5),
+      weight = px(1),
       style = "solid"
     )
   )
@@ -144,7 +145,7 @@ matchup_table <- data %>%
 # save the table graphic
 gt_save_crop(
   matchup_table,
-  "matchup_table_review.png",
+  "matchup_table.png",
   bg = color$background,
   whitespace = 40,
   zoom = 600 / 96
