@@ -44,7 +44,7 @@ try:
     client: Client = create_client(supabase_url, supabase_key)
 
     # update the most recent standings
-    #_ = update_standings(client, sleeper_league_id, supabase_league_id, season_id, week)
+    _ = update_standings(client, sleeper_league_id, supabase_league_id, season_id, week)
 
     # get the most recent league table
     league_table: pl.DataFrame = get_league_table(client, season_id, week)

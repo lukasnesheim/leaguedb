@@ -88,7 +88,16 @@ table <- data %>%
     style = cell_borders(
       sides = "bottom",
       color = color$london[[5]],
-      weight = px(0.5),
+      weight = px(1),
+      style = "solid"
+    )
+  ) %>%
+  tab_style(
+    location = cells_body(rows = 1),
+    style = cell_borders(
+      sides = "top",
+      color = color$london[[3]],
+      weight = px(1),
       style = "solid"
     )
   ) %>%
